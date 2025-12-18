@@ -1,9 +1,9 @@
 package tests;
 
-import org.testng.annotations.Test;
 import base.BaseTest;
-import pages.*;
-
+import pages.LoginPage;
+import pages.ProductsPage;
+import org.testng.annotations.Test;
 public class CartTest extends BaseTest {
 
     @Test
