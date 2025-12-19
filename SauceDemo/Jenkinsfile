@@ -2,17 +2,18 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                echo 'Checking out source code'
+                checkout scm
             }
         }
 
         stage('Build & Run Tests') {
             steps {
                 echo 'Running Maven tests'
-                bat 'mvn clean test'
+                dir('SauceDemo') {
+                    bat 'mvn clean test'
+                }
             }
         }
     }
@@ -21,11 +22,11 @@ pipeline {
         always {
             echo 'Pipeline execution completed'
         }
-        success {
-            echo 'Build and tests successful'
-        }
         failure {
             echo 'Build or tests failed'
+        }
+        success {
+            echo 'Build and tests successful'
         }
     }
 }
