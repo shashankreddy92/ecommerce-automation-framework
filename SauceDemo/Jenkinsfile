@@ -1,16 +1,10 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build & Run Tests') {
             steps {
-                echo 'Running Maven tests'
+                // Navigates into the subfolder to find your pom.xml
                 dir('SauceDemo') {
                     bat 'mvn clean test'
                 }
@@ -18,24 +12,19 @@ pipeline {
         }
     }
 
+    // Single post block handles everything after execution
     post {
         always {
             echo 'Pipeline execution completed'
-        }
-        failure {
-            echo 'Build or tests failed'
+            
+            // Points Jenkins specifically to the nested target directory to find the reports
+            testng targetDir: 'SauceDemo/target/surefire-reports', reportFilenamePattern: 'testng-results.xml'
         }
         success {
             echo 'Build and tests successful'
         }
-    }
-
-    // This section captures and generates the test reports
-    post {
-        always {
-            // Publishes TestNG results even if the build itself has test failures
-            testng targetDir: 'target/surefire-reports', reportFilenamePattern: 'testng-results.xml'
+        failure {
+            echo 'Build or tests failed'
         }
     }
-
 }
