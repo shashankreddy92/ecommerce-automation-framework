@@ -29,4 +29,13 @@ pipeline {
             echo 'Build and tests successful'
         }
     }
+
+    // This section captures and generates the test reports
+    post {
+        always {
+            // Publishes TestNG results even if the build itself has test failures
+            testng targetDir: 'target/surefire-reports', reportFilenamePattern: 'testng-results.xml'
+        }
+    }
+
 }
